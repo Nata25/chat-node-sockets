@@ -1,7 +1,8 @@
 import React from 'react';
-import { io } from 'socket.io-client';
-import { geolocationPromisified } from './utils.js';
 import { useEffect } from 'react';
+import { io } from 'socket.io-client';
+
+import { geolocationPromisified } from './utils.js';
 
 const socket = io('ws://localhost:3000');
 
@@ -26,33 +27,30 @@ const Chat = () => {
     }
   }
 
+  const shareLocation = async () => {
+    try {
+      const position = await geolocationPromisified();
+      const { coords } = position;
+      const locationObj = {
+        lat: coords.latitude,
+        lng: coords.longitude,
+      };
+      const successCallback = () => console.log('Location was successfully shared.');
+      socket.emit('sendLocation', locationObj, successCallback);
+    } catch (e) {
+      console.warn(`Error ocurred: ${e}`);
+    }
+  }
+
   return (
     <div>
       <form onSubmit={postMessage} action="#">
         <input name="message"/>
         <button>Submit message</button>
       </form>
-    {/* <button id="locationShare">Send location</button> */}
+      <button onClick={shareLocation}>Send location</button>
     </div>
   )
 }
 
 export default Chat;
-
-// FORE FUTURE REFERENCE
-
-// document.querySelector('#locationShare').addEventListener('click', function() {
-//   geolocationPromisified()
-//     .then(position => {
-//       const { coords } = position;
-//       socket.emit('sendLocation', {
-//         lat: coords.latitude,
-//         lng: coords.longitude,
-//       }, () => {
-//         console.log('Location was successfully shared.')
-//       });
-//     })
-//     .catch(e => {
-//       console.warn(`Error ocurred: ${e}`);
-//     });
-// });
