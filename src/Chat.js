@@ -5,43 +5,41 @@ import { useEffect } from 'react';
 
 const socket = io('ws://localhost:3000');
 
-socket.on('message', message => {
-  console.log(message);
-});
-
 const Chat = () => {
   useEffect(() => {
-    setTimeout(() => {
-      socket.emit('sendMessage', 'Hello again', error => {
-        // Just for testing!
+    socket.on('message', message => {
+      console.log(message);
+    });
+  }, [socket]);
+
+  const postMessage = (event) => {
+    event.preventDefault();
+    const { value } = event.target.elements.message;
+    if (value) {
+      socket.emit('sendMessage', value, error => {
         if (error) {
           console.warn(error);
           return;
         }
         console.log('Message delivered');
       });
-    }, 1000);
-  }, []);
-  return <div>This is chat!</div>
+    }
+  }
+
+  return (
+    <div>
+      <form onSubmit={postMessage} action="#">
+        <input name="message"/>
+        <button>Submit message</button>
+      </form>
+    {/* <button id="locationShare">Send location</button> */}
+    </div>
+  )
 }
 
 export default Chat;
 
 // FORE FUTURE REFERENCE
-// document.querySelector('#chatForm').addEventListener('submit', function(event) {
-//   event.preventDefault();
-//   const { value } = event.target.elements.message;
-//   if (value) {
-//     socket.emit('sendMessage', value, error => {
-//       if (error) {
-//         console.warn(error);
-//         return;
-//       }
-//       console.log('Message delivered');
-//     });
-//   }
-//   return false;
-// });
 
 // document.querySelector('#locationShare').addEventListener('click', function() {
 //   geolocationPromisified()
