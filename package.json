@@ -4,8 +4,9 @@
   "description": "Training project on Node js with sockets",
   "type": "module",
   "scripts": {
-    "start": "node server/app.js",
-    "dev": "nodemon server/app.js",
+    "start": "npm-run-all --parallel dev:client dev:server",
+    "dev:client": "webpack-dev-server . --mode=development",
+    "dev:server": "nodemon server/app.js",
     "build": "webpack .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -16,7 +17,8 @@
     "express": "^4.18.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "serve-static": "^1.15.0"
+    "serve-static": "^1.15.0",
+    "socket.io-client": "^4.6.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.21.0",
@@ -33,6 +35,7 @@
     "eslint-plugin-jest": "^27.2.1",
     "path": "^0.12.7",
     "webpack": "^5.75.0",
-    "webpack-cli": "^5.0.1"
+    "webpack-cli": "^5.0.1",
+    "webpack-dev-server": "^4.11.1"
   }
 }

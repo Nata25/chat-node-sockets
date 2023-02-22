@@ -15,6 +15,21 @@ export default {
   resolve: {
     extensions: ['.js','.jsx','.json'] 
   },
+  devServer: {
+    port: 9500,
+    static: ['./public'],
+    open: false,
+    hot: false,
+    watchFiles: {
+      paths: ['src/*.js'],
+    },
+    liveReload: true,
+    /* This forces dev server sockets to disconnect. */
+    // client: {
+    //   webSocketURL: 'ws://localhost:3000',
+    // }
+    /* NOTE: still, there's an error ERR_CONNECTION_REFUSED thrown on every auto-rebuild, though the app renders correctly. */
+  },
   module: {
     rules: [
       {
