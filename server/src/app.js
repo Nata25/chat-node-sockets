@@ -3,6 +3,7 @@ import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
 import { fileURLToPath } from 'url';
+import Filter from 'bad-words';
 import serveStatic from 'serve-static';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -19,7 +20,13 @@ io.on('connection', function(socket) {
   // emit to all but this particular user
   socket.broadcast.emit('message', 'New user has joined!');
 
-  socket.on('sendMessage', message => {
+  socket.on('sendMessage', (message, callback) => {
+    const filter = new Filter();
+    if (filter.isProfane(message)) {
+      callback('Profanity is not allowed!');
+      return;
+    }
+    callback();
     // emit to everybody
     io.emit('message', message);
   });
@@ -28,6 +35,11 @@ io.on('connection', function(socket) {
   // NOTE: this runs also on page reload
   socket.on('disconnect', () => {
     io.emit('message', 'A user has left!');
+  });
+
+  socket.on('sendLocation', ({ lat, lng }, callback) => {
+    io.emit('message', `https://google.com/maps?q=${lat},${lng}`);
+    callback();
   });
 });
 
