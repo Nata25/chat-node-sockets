@@ -3,6 +3,8 @@ import { useEffect } from 'react';
 import { io } from 'socket.io-client';
 
 import { geolocationPromisified } from './utils.js';
+import chatIcon from './img/chat.svg';
+import pinIcon from './img/location-pin.svg';
 
 const socket = io('ws://localhost:3000');
 
@@ -43,12 +45,19 @@ const Chat = () => {
   }
 
   return (
-    <div>
+    <div className="chat-section">
+      <h1 className="title">
+        Chat App
+        <img src={chatIcon} className="chat-icon" alt="Chat Icon" />
+      </h1>
       <form onSubmit={postMessage} action="#">
         <input name="message"/>
         <button>Submit message</button>
       </form>
-      <button onClick={shareLocation}>Send location</button>
+      <div className="location">
+        <img src={pinIcon} className="location-icon" alt="location icon" />
+        <button onClick={shareLocation}>Send location</button>
+      </div>
     </div>
   )
 }

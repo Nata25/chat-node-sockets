@@ -13,16 +13,13 @@ export default {
   },
   target: 'web',
   resolve: {
-    extensions: ['.js','.jsx','.json'] 
+    extensions: ['.js', '.jsx', '.json', '.css', '.svg']
   },
   devServer: {
     port: 9500,
     static: ['./public'],
     open: false,
     hot: false,
-    watchFiles: {
-      paths: ['src/*.js'],
-    },
     liveReload: true,
     /* This forces dev server sockets to disconnect. */
     // client: {
@@ -36,7 +33,22 @@ export default {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use:  'babel-loader'
-      }
+      },
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },
+      {
+        test: /\.svg$/,
+        use: [
+          {
+            loader: 'svg-url-loader',
+            options: {
+              limit: 10000,
+            },
+          },
+        ],
+      },
     ]
   }
 }
