@@ -1,14 +1,22 @@
 <html>
   <head>
     <title>Chat App</title>
+    <link rel="stylesheet" href="./styles.css">
   </head>
   <body>
-    <h1>Chat App</h1>
-    <form action="#" id="chatForm">
-      <input name="message"/>
-      <button>Submit message</button>
-    </form>
-    <button id="locationShare">Send location</button>
+    <section class="chat-section">
+      <h1 class="title">Chat App
+        <img src="./img/chat.svg" class="chat-icon"/>
+      </h1>
+      <form action="#" id="chatForm">
+        <input name="message"/>
+        <button>Submit message</button>
+      </form>
+      <div class="location">
+        <img class="location-icon" src="./img/location-pin.svg"/>
+        <button id="locationShare">Send location</button>
+      </div>
+    </section>
     <script src="/socket.io/socket.io.js"></script>
     <script type="module" src="/js/chat.js"></script>
   </body>
