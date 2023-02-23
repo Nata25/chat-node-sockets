@@ -40,7 +40,7 @@ io.on('connection', function(socket) {
   });
 
   socket.on('sendLocation', ({ lat, lng }, callback) => {
-    io.emit('message', `https://google.com/maps?q=${lat},${lng}`);
+    io.emit('locationMessage', `https://google.com/maps?q=${lat},${lng}`);
     callback();
   });
 });

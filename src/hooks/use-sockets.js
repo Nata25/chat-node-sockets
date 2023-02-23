@@ -1,12 +1,23 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 
 const socket = io('ws://localhost:3000');
 
 const useSockets = () => {
+  const [ message, setMessage ] = useState('');
+  const [ location, setLocation ] = useState('');
+
   useEffect(() => {
     socket.on('message', message => {
       console.log(message);
+      setMessage(message);
+    });
+  }, [socket]);
+
+  useEffect(() => {
+    socket.on('locationMessage', message => {
+      console.log(message);
+      setLocation(message);
     });
   }, [socket]);
 
@@ -34,7 +45,7 @@ const useSockets = () => {
     });
   }
 
-  return { sendMessage, sendLocation };
+  return { sendMessage, sendLocation, message, location };
 }
 
 export default useSockets;
