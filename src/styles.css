@@ -21,11 +21,17 @@ button {
   border-radius: 5px;
   cursor: pointer;
   text-transform: uppercase;
-  transition: background-color .1s;
+  transition: all .1s;
 }
 
-button:hover {
+button:hover:not([disabled]) {
   background-color: var(--darkblue);
+}
+
+button[disabled] {
+  opacity: .4;
+  background-color: var(--black);
+  cursor: not-allowed;
 }
 
 .chat-section {

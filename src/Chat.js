@@ -2,9 +2,10 @@ import React from 'react';
 import { useEffect } from 'react';
 import { io } from 'socket.io-client';
 
-import { geolocationPromisified } from './utils.js';
 import chatIcon from './img/chat.svg';
 import pinIcon from './img/location-pin.svg';
+
+import useGeolocation from './hooks/use-geolocation.js';
 
 const socket = io('ws://localhost:3000');
 
@@ -29,19 +30,14 @@ const Chat = () => {
     }
   }
 
-  const shareLocation = async () => {
-    try {
-      const position = await geolocationPromisified();
-      const { coords } = position;
-      const locationObj = {
-        lat: coords.latitude,
-        lng: coords.longitude,
-      };
-      const successCallback = () => console.log('Location was successfully shared.');
-      socket.emit('sendLocation', locationObj, successCallback);
-    } catch (e) {
-      console.warn(`Error ocurred: ${e}`);
-    }
+  const { isLoading, error, fetchGeolocation } = useGeolocation();
+
+  const locationSharedSuccess = () => console.log('Location was successfully shared.');
+
+  const shareLocation = () => {
+    fetchGeolocation(locationObj => {
+      socket.emit('sendLocation', locationObj, locationSharedSuccess);
+    });
   }
 
   return (
@@ -56,7 +52,8 @@ const Chat = () => {
       </form>
       <div className="location">
         <img src={pinIcon} className="location-icon" alt="location icon" />
-        <button onClick={shareLocation}>Send location</button>
+        <button disabled={isLoading ?? null} onClick={shareLocation}>Send location</button>
+        {error && <p>Error on fetching location!</p>}
       </div>
     </div>
   )
