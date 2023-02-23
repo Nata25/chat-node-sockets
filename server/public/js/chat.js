@@ -3,14 +3,16 @@ import { geolocationPromisified } from './utils.js';
 const socket = io();
 
 // DOM elements
-const chatForm = document.querySelector('#chatForm');
-const submitMessageBtn = document.querySelector('#submitMessageBtn');
-const message = document.querySelector('#message');
-const locationBtn = document.querySelector('#locationShare');
-const messages = document.querySelector('#messages');
+const chatForm = document.getElementById('chatForm');
+const submitMessageBtn = document.getElementById('submitMessageBtn');
+const message = document.getElementById('message');
+const locationBtn = document.getElementById('locationShare');
+const messages = document.getElementById('messages');
+const locationMessage = document.getElementById('locationMessage');
 
 // Templates
-const messageTemplate = document.querySelector('#messageTemplate').innerHTML;
+const messageTemplate = document.getElementById('messageTemplate').innerHTML;
+const locationTemplate = document.getElementById('locationTemplate').innerHTML;
 
 socket.on('message', message => {
   console.log(message);
@@ -18,8 +20,10 @@ socket.on('message', message => {
   messages.insertAdjacentHTML('beforeend', html);
 });
 
-socket.on('locationMessage', message => {
-  console.log(message);
+socket.on('locationMessage', locationLink => {
+  console.log(locationLink);
+  const html = Mustache.render(locationTemplate, { locationLink });
+  messages.insertAdjacentHTML('beforeend', html);
 });
 
 chatForm.addEventListener('submit', function(event) {

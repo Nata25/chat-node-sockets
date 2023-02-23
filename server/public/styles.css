@@ -85,3 +85,7 @@ input {
   letter-spacing: .5px;
   font-size: 18px;
 }
+
+a {
+  color: var(--blue);
+}
