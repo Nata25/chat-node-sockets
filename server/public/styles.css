@@ -79,3 +79,9 @@ input {
 .location-icon {
   width: 40px;
 }
+
+.messages-list p {
+  color: var(--black);
+  letter-spacing: .5px;
+  font-size: 18px;
+}

@@ -2,14 +2,25 @@ import { geolocationPromisified } from './utils.js';
 
 const socket = io();
 
-socket.on('message', message => {
-  console.log(message);
-});
-
+// DOM elements
 const chatForm = document.querySelector('#chatForm');
 const submitMessageBtn = document.querySelector('#submitMessageBtn');
 const message = document.querySelector('#message');
 const locationBtn = document.querySelector('#locationShare');
+const messages = document.querySelector('#messages');
+
+// Templates
+const messageTemplate = document.querySelector('#messageTemplate').innerHTML;
+
+socket.on('message', message => {
+  console.log(message);
+  const html = Mustache.render(messageTemplate, { message });
+  messages.insertAdjacentHTML('beforeend', html);
+});
+
+socket.on('locationMessage', message => {
+  console.log(message);
+});
 
 chatForm.addEventListener('submit', function(event) {
   event.preventDefault();
