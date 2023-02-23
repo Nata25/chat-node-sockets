@@ -1,43 +1,28 @@
 import React from 'react';
-import { useEffect } from 'react';
-import { io } from 'socket.io-client';
 
 import chatIcon from './img/chat.svg';
 import pinIcon from './img/location-pin.svg';
 
+import useSockets from './hooks/use-sockets.js';
 import useGeolocation from './hooks/use-geolocation.js';
 
-const socket = io('ws://localhost:3000');
-
 const Chat = () => {
-  useEffect(() => {
-    socket.on('message', message => {
-      console.log(message);
-    });
-  }, [socket]);
+  const { sendMessage, sendLocation } = useSockets();
+  const { isLoading, error, fetchGeolocation } = useGeolocation();
 
-  const postMessage = (event) => {
+  const postMessage = event => {
     event.preventDefault();
-    const { value } = event.target.elements.message;
+    const input = event.target.elements.message;
+    const { value } = input;
     if (value) {
-      socket.emit('sendMessage', value, error => {
-        if (error) {
-          console.warn(error);
-          return;
-        }
-        console.log('Message delivered');
-      });
+      sendMessage(value);
+      input.value = '';
+      input.focus();
     }
   }
 
-  const { isLoading, error, fetchGeolocation } = useGeolocation();
-
-  const locationSharedSuccess = () => console.log('Location was successfully shared.');
-
   const shareLocation = () => {
-    fetchGeolocation(locationObj => {
-      socket.emit('sendLocation', locationObj, locationSharedSuccess);
-    });
+    fetchGeolocation(sendLocation);
   }
 
   return (
