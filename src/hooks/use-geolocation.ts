@@ -1,13 +1,13 @@
 import { useState } from 'react';
 
-import { geolocationPromisified } from '../utils.js';
+import { geolocationPromisified } from '../helpers/geolocation-promisified.js';
 
 const useGeolocation = () => {
   const [error, setError] = useState(null);
   const [isLoading, setLoading] = useState(false);
   const [geolocationData, setGeolocationData] = useState({});
 
-  const fetchGeolocation = async (onDone) => {
+  const fetchGeolocation = async (onDone: Function) => {
     setLoading(true);
     try {
       const position = await geolocationPromisified();

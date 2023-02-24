@@ -6,6 +6,8 @@ import express from 'express';
 import { Server } from 'socket.io';
 import Filter from 'bad-words';
 
+import { generateMessage } from './utils/generate-message.js';
+
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -17,7 +19,7 @@ const io = new Server(server, {
 
 io.on('connection', function(socket) {
   // emit to a new user
-  socket.emit('message', 'Welcome!');
+  socket.emit('message', generateMessage('Welcome!'));
 
   // emit to all but this particular user
   socket.broadcast.emit('message', 'New user has joined!');
@@ -30,17 +32,17 @@ io.on('connection', function(socket) {
     }
     callback();
     // emit to everybody
-    io.emit('message', message);
+    io.emit('message', generateMessage(message));
   });
 
   // notify everybody when user leaves
   // NOTE: this runs also on page reload
   socket.on('disconnect', () => {
-    io.emit('message', 'A user has left!');
+    io.emit('message', generateMessage('A user has left!'));
   });
 
   socket.on('sendLocation', ({ lat, lng }, callback) => {
-    io.emit('locationMessage', `https://google.com/maps?q=${lat},${lng}`);
+    io.emit('locationMessage', generateMessage(`https://google.com/maps?q=${lat},${lng}`));
     callback();
   });
 });

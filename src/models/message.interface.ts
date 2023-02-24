@@ -1,6 +1,10 @@
-export interface IMessage {
-  type: MessageType,
+export interface IMessageDTO {
   value: string,
+  createdAt: string,
+}
+
+export interface IMessage extends IMessageDTO {
+  type: MessageType,
 }
 
 export enum MessageType {

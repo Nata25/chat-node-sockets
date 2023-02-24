@@ -6,7 +6,7 @@ Training project (in progress).
 - [x] The app notifies all users when somebody is leaving chat.
 - [x] The app prints messages.
 - [x] Users are able to share their current location.
-- [x] Users can see their messages listed on UI.
+- [x] Users can see their messages listed on UI with date and time when they were sent.
 - [x] Users can see the clickable link to the shared location.
 - [ ] TBD
 

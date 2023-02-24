@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 
+import { IMessageDTO } from '../models/message.interface';
+
 const socket = io('ws://localhost:3000');
 
 const useSockets = () => {
-  const [ message, setMessage ] = useState('');
-  const [ location, setLocation ] = useState('');
+  const [ message, setMessage ] = useState<IMessageDTO>();
+  const [ location, setLocation ] = useState<IMessageDTO>();
 
   useEffect(() => {
-    socket.on('message', message => {
+    socket.on('message', (message: IMessageDTO) => {
       console.log(message);
       setMessage(message);
     });
@@ -21,7 +23,7 @@ const useSockets = () => {
     });
   }, [socket]);
 
-  const sendMessage = value => {
+  const sendMessage = (value: string) => {
     socket.emit(
       'sendMessage',
       value,
@@ -29,7 +31,7 @@ const useSockets = () => {
       - if message was successfully send
       - if there's error on validating message (then error message is passed as an argument)
       */
-      error => {
+      (error: Error) => {
         if (error) {
           console.warn(error);
           return;
@@ -39,7 +41,7 @@ const useSockets = () => {
     );
   }
 
-  const sendLocation = value => {
+  const sendLocation = (value: string) => {
     socket.emit('sendLocation', value, () => {
       console.log('Location was successfully shared.')
     });
