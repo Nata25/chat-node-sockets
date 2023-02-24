@@ -6,6 +6,8 @@ import { fileURLToPath } from 'url';
 import Filter from 'bad-words';
 import serveStatic from 'serve-static';
 
+import { generateMessage } from './utils/messages.js';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -15,10 +17,10 @@ const io = new Server(server);
 
 io.on('connection', function(socket) {
   // emit to a new user
-  socket.emit('message', 'Welcome!');
+  socket.emit('message', generateMessage('Welcome!'));
 
   // emit to all but this particular user
-  socket.broadcast.emit('message', 'New user has joined!');
+  socket.broadcast.emit('message', generateMessage('New user has joined!'));
 
   socket.on('sendMessage', (message, callback) => {
     const filter = new Filter();
@@ -28,17 +30,18 @@ io.on('connection', function(socket) {
     }
     callback();
     // emit to everybody
-    io.emit('message', message);
+    io.emit('message', generateMessage(message));
   });
 
   // notify everybody when user leaves
   // NOTE: this runs also on page reload
   socket.on('disconnect', () => {
-    io.emit('message', 'A user has left!');
+    io.emit('message', generateMessage('A user has left!'));
   });
 
   socket.on('sendLocation', ({ lat, lng }, callback) => {
-    io.emit('locationMessage', `https://google.com/maps?q=${lat},${lng}`);
+    io.emit('locationMessage',
+      generateMessage(`https://google.com/maps?q=${lat},${lng}`));
     callback();
   });
 });

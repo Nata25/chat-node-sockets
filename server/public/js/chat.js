@@ -8,30 +8,28 @@ const submitMessageBtn = document.getElementById('submitMessageBtn');
 const message = document.getElementById('message');
 const locationBtn = document.getElementById('locationShare');
 const messages = document.getElementById('messages');
-const locationMessage = document.getElementById('locationMessage');
 
 // Templates
 const messageTemplate = document.getElementById('messageTemplate').innerHTML;
 const locationTemplate = document.getElementById('locationTemplate').innerHTML;
 
 socket.on('message', message => {
-  console.log(message);
-  const html = Mustache.render(messageTemplate, { message });
+  const { text, createdAt } = message;
+  const html = Mustache.render(messageTemplate, { message: text, createdAt });
   messages.insertAdjacentHTML('beforeend', html);
 });
 
-socket.on('locationMessage', locationLink => {
-  console.log(locationLink);
-  const html = Mustache.render(locationTemplate, { locationLink });
+socket.on('locationMessage', locationData => {
+  const { text, createdAt } = locationData;
+  const html = Mustache.render(locationTemplate, { locationLink: text, createdAt });
   messages.insertAdjacentHTML('beforeend', html);
 });
 
 chatForm.addEventListener('submit', function(event) {
   event.preventDefault();
-  submitMessageBtn.setAttribute('disabled', 'disabled');
-
   const { value } = event.target.elements.message;
   if (value) {
+    submitMessageBtn.setAttribute('disabled', 'disabled');
     socket.emit('sendMessage', value, error => {
       submitMessageBtn.removeAttribute('disabled');
       message.value = '';
