@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Chat from './Chat.js';
+import Chat from './Chat';
 import './styles.css';
 
 const RootApp = () => {

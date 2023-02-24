@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FormEvent }  from 'react';
 
 import chatIcon from './img/chat.svg';
 import pinIcon from './img/location-pin.svg';
@@ -6,25 +6,28 @@ import pinIcon from './img/location-pin.svg';
 import useSockets from './hooks/use-sockets.js';
 import useGeolocation from './hooks/use-geolocation.js';
 
+import { IFormElements } from './models/form-elements';
+import { MessageType, IMessage } from './models/message.interface';
+
 const Chat = () => {
-  const [ messages, setMessages ] = React.useState([]);
+  const [ messages, setMessages ] = React.useState<IMessage[]>([]);
   const { sendMessage, sendLocation, message: newMessage, location } = useSockets();
   const { isLoading, error, fetchGeolocation } = useGeolocation();
 
   React.useEffect(() => {
-    setMessages([...messages, { type: 'text', value: newMessage }]);
+    setMessages([...messages, { type: MessageType.TEXT, value: newMessage }]);
   }, [newMessage]);
 
   React.useEffect(() => {
-    setMessages([...messages, { type: 'link', value: location }]);
+    setMessages([...messages, { type: MessageType.LINK, value: location }]);
   }, [location]);
 
-  const postMessage = event => {
+  const postMessage = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const input = event.target.elements.message;
-    const { value } = input;
-    if (value) {
-      sendMessage(value);
+    const formElements: IFormElements = (event.target as HTMLFormElement).elements;
+    const input = formElements.message;
+    if (input.value) {
+      sendMessage(input.value);
       input.value = '';
       input.focus();
     }
@@ -42,7 +45,7 @@ const Chat = () => {
       </h1>
       <div className="messages-list">
         {messages.map((msg, ind) => {
-          if (msg.type === 'text') return <p key={`${msg.value}-${ind}`}>{ msg.value }</p>
+          if (msg.type === MessageType.TEXT) return <p key={`${msg.value}-${ind}`}>{ msg.value }</p>
           else return (<p key={`${msg.value}-${ind}`}>
             <a
               key={`${msg.value}-${ind}`}

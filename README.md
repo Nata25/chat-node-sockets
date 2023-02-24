@@ -1,4 +1,4 @@
-### Chat app with Node and Socket.io (+ React)
+### Chat app with Node and Socket.io (+ React, Typescript)
 
 Training project (in progress).
 
@@ -10,9 +10,9 @@ Training project (in progress).
 - [x] Users can see the clickable link to the shared location.
 - [ ] TBD
 
-The `main` implementation is based on **The complete Node.js Developer Course (3rd Edition) by Andrew Mead and Rob Percival**. It uses `Mustache` lib to render dynamic content on UI.
+The `main` implementation is based on **The complete Node.js Developer Course (3rd Edition) by Andrew Mead and Rob Percival** (_Udemy_). It uses `Mustache` lib to render dynamic content on UI.
 
-The alternative implementation with **React** is in a separate branch `react` (launched with `webpack`, `webpack-dev-server` and `babel`, no out-of-the-box solutions like CRA).
+The alternative implementation with **React & Typescript** is in a separate branch `react` (launched with `webpack`, `webpack-dev-server` and `babel`, no out-of-the-box solutions like CRA).
 
 To run app in dev mode:
 
