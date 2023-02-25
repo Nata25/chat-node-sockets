@@ -1,0 +1,52 @@
+<html>
+  <head>
+    <title>Chat App</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <section class="chat-section">
+      <h1 class="title">
+        <a href="/">Chat App</a>
+        <img src="./img/chat.svg" class="chat-icon"/>
+      </h1>
+      <!-- Messages go here -->
+      <div id="messages" class="messages"></div>
+
+      <!-- User input -->
+      <div class="controls">
+        <form action="#" id="chatForm">
+          <input id="message" name="message" autocomplete="off"/>
+          <button id="submitMessageBtn">Submit message</button>
+        </form>
+        <div class="location">
+          <img class="location-icon" src="./img/location-pin.svg"/>
+          <button id="locationShare">Send location</button>
+        </div>
+      </div>
+
+      <!-- Template for messages -->
+      <script id="messageTemplate" type="text/html">
+        <div>
+          <p class="message">
+            {{ message }}
+            <span class="date-time"> - {{ createdAt }} </span> 
+          </p>
+        </div>
+      </script>
+
+      <!-- Template for geolocation -->
+      <script id="locationTemplate" type="text/html">
+        <div class="geolocation-link">
+          <p>
+            <a href={{ locationLink }} target="_blank">My current location</a> 
+            <span class="date-time"> - {{ createdAt }} </span> 
+          </p>
+        </div>
+      </script>
+
+    </section>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="module" src="/js/chat.js"></script>
+  </body>
+</html>
