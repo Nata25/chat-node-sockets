@@ -1,8 +1,8 @@
-import { parseDate } from "./parse-date.js"
+import { parseTime } from "./parse-date.js"
 
 export const generateMessage = text => {
   return {
     text,
-    createdAt: parseDate(),
+    createdAt: parseTime(),
   }
 }

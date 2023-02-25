@@ -9,6 +9,9 @@
         <a href="/">Chat App</a>
         <img src="./img/chat.svg" class="chat-icon"/>
       </h1>
+      <!-- Room title -->
+      <div id="roomTitle"></div>
+
       <!-- Messages go here -->
       <div id="messages" class="messages"></div>
 
@@ -24,12 +27,18 @@
         </div>
       </div>
 
+      <!-- Template for Room name -->
+      <script id="roomNameTemplate" type="text/html">
+        <h2>Room: {{ room }}</h2>
+      </script>
+
       <!-- Template for messages -->
       <script id="messageTemplate" type="text/html">
         <div>
           <p class="message">
-            {{ message }}
+            <span class="user-name">Some user</span>
             <span class="date-time"> - {{ createdAt }} </span> 
+            <span class="message">{{ message }}</span>
           </p>
         </div>
       </script>

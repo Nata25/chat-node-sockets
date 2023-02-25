@@ -130,9 +130,15 @@ input {
 }
 
 .message {
+  display: block;
+  margin-top: 10px;
   color: var(--black);
   letter-spacing: .5px;
   font-size: 18px;
+}
+
+.user-name {
+  font-weight: bold;
 }
 
 a {

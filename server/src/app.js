@@ -16,11 +16,15 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 io.on('connection', function(socket) {
-  // emit to a new user
-  socket.emit('message', generateMessage('Welcome!'));
 
-  // emit to all but this particular user
-  socket.broadcast.emit('message', generateMessage('New user has joined!'));
+  socket.on('join', ({ userName, room }) => {
+    socket.join(room);
+    // emit to a new user
+    socket.emit('message', generateMessage(`Welcome, ${userName}!`));
+
+    // emit to all users in a room except for this particular user
+    socket.broadcast.to(room).emit('message', generateMessage(`A user ${userName} has joined!`));
+  });
 
   socket.on('sendMessage', (message, callback) => {
     const filter = new Filter();
@@ -29,8 +33,8 @@ io.on('connection', function(socket) {
       return;
     }
     callback();
-    // emit to everybody
-    io.emit('message', generateMessage(message));
+    // emit to everybody in a specific room; room name is temporarily hardcoded
+    io.to('A1').emit('message', generateMessage(message));
   });
 
   // notify everybody when user leaves

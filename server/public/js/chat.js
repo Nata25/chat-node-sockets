@@ -8,10 +8,22 @@ const submitMessageBtn = document.getElementById('submitMessageBtn');
 const message = document.getElementById('message');
 const locationBtn = document.getElementById('locationShare');
 const messages = document.getElementById('messages');
+const roomTitle = document.getElementById('roomTitle');
 
 // Templates
 const messageTemplate = document.getElementById('messageTemplate').innerHTML;
 const locationTemplate = document.getElementById('locationTemplate').innerHTML;
+const roomNameTemplate = document.getElementById('roomNameTemplate').innerHTML;
+
+// Chat params
+const obj = new URLSearchParams(window.location.search);
+const userName = obj.get('username');
+const room = obj.get('room');
+
+const html = Mustache.render(roomNameTemplate, { room });
+roomTitle.insertAdjacentHTML('beforeend', html);
+
+socket.emit('join', { userName, room });
 
 socket.on('message', message => {
   const { text, createdAt } = message;

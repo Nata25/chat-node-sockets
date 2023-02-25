@@ -9,3 +9,10 @@ export const parseDate = () => {
   const min = now.getMinutes();
   return `${format(hours)}:${format(min)} ${year}-${format(month)}-${format(date)}`;
 }
+
+export const parseTime = () => {
+  const now = new Date();
+  const hours = now.getHours();
+  const min = now.getMinutes();
+  return `${format(hours)}:${format(min)}`;
+}
