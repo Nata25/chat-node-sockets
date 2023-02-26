@@ -32,15 +32,23 @@ socket.emit('join', { userName, room }, (error) => {
 
 socket.on('message', message => {
   const { text, createdAt, userName, userId } = message;
-  const user = userId === socket.id ? '[Me]' : userName;
-  const html = Mustache.render(messageTemplate, { message: text, createdAt, user });
+  const isCurrentUser = userId === socket.id;
+  const user = isCurrentUser ? '[Me]' : userName;
+  let html = Mustache.render(messageTemplate, { message: text, createdAt, user });
+  if (isCurrentUser) {
+    html = `<div class="current-user">${html}</div>`;
+  }
   messages.insertAdjacentHTML('beforeend', html);
 });
 
 socket.on('locationMessage', locationData => {
   const { text, createdAt, userId } = locationData;
-  const user = userId === socket.id ? '[Me]' : userName;
-  const html = Mustache.render(locationTemplate, { locationLink: text, createdAt, user });
+  const isCurrentUser = userId === socket.id;
+  const user = isCurrentUser ? '[Me]' : userName;
+  let html = Mustache.render(locationTemplate, { locationLink: text, createdAt, user });
+  if (isCurrentUser) {
+    html = `<div class="current-user">${html}</div>`;
+  }
   messages.insertAdjacentHTML('beforeend', html);
 });
 

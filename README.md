@@ -11,8 +11,8 @@ Training project (in progress).
 - [x] Users can share their current location.
 - [x] Users can see their messages listed on UI with date and time when they were sent.
 - [x] Users can see the clickable link to the shared location.
-- [ ] User names are displayed near each message.
-- [ ] The messages of current user are highlighted to distinct from others.
+- [x] Usernames are displayed near each message. For system messages and current user there are corresponding placeholders.
+- [x] The messages of current user are highlighted to distinct from others.
 
 The `main` implementation is based on **The complete Node.js Developer Course (3rd Edition) by Andrew Mead and Rob Percival** ([here](https://www.udemy.com/course/the-complete-nodejs-developer-course-2) on _Udemy_). It uses `Mustache` lib to render dynamic content on UI.
 

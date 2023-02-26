@@ -27,7 +27,6 @@ const removeUser = id => {
     }
   }
   const deletedUser = users.splice(existingUserInd, 1)[0];
-  console.log(deletedUser);
   return { user: deletedUser };
 }
 
