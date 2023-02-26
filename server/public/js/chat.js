@@ -23,7 +23,12 @@ const room = obj.get('room');
 const html = Mustache.render(roomNameTemplate, { room });
 roomTitle.insertAdjacentHTML('beforeend', html);
 
-socket.emit('join', { userName, room });
+socket.emit('join', { userName, room }, (error) => {
+  if (error) {
+    alert('This user cannot join the room!');
+    location.href = '/';
+  }
+});
 
 socket.on('message', message => {
   const { text, createdAt } = message;

@@ -1,3 +1,3 @@
-export const numberToTwoDigits = aNumber => {
-  return aNumber > 10 ? aNumber : `0${aNumber}`;
+export const numberToTwoDigits = (aNumber) => {
+  return aNumber > 9 ? aNumber : `0${aNumber}`;
 }

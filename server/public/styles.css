@@ -3,11 +3,13 @@
   --black: #424242;
   --lightblue: lightblue;
   --blue: #20b7e8;
-  --darkblue: #1090ca;
+  --medblue: #1090ca;
+  --darkblue: #054f71;
 }
 
 body {
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  color: var(--black);
 }
 
 button {
@@ -26,7 +28,7 @@ button {
 }
 
 button:hover:not([disabled]) {
-  background-color: var(--darkblue);
+  background-color: var(--medblue);
 }
 
 button[disabled] {
@@ -65,7 +67,7 @@ button[disabled] {
 .title,
 .title > * {
   font-size: 40px;
-  color: var(--darkblue);
+  color: var(--medblue);
 }
 
 .title > a {
@@ -118,14 +120,26 @@ input {
 .location {
   display: flex;
   gap: 10px;
+  white-space: nowrap;
+}
+
+.location-button {
+  display: flex;
+  padding-left: 10px;
+  gap: 10px;
+  align-items: center;
 }
 
 .location-icon {
-  width: 40px;
+  flex-basis: 20px;
+  width: 20px;
 }
 
 .messages {
-  height: calc(100vh - 250px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: calc(100vh - 300px);
   overflow: auto;
 }
 
@@ -139,6 +153,11 @@ input {
 
 .user-name {
   font-weight: bold;
+}
+
+.message-text {
+  display: block;
+  margin-top: 10px;
 }
 
 a {
@@ -157,5 +176,5 @@ a {
   display: flex;
   align-items: center;
   gap: 30px;
-  flex-wrap: wrap;
+  overflow: auto;
 }

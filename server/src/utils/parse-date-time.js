@@ -14,5 +14,7 @@ export const parseTime = () => {
   const now = new Date();
   const hours = now.getHours();
   const min = now.getMinutes();
-  return `${format(hours)}:${format(min)}`;
+  const sec = format(now.getSeconds());
+  console.log('seconds:', now.getSeconds(), sec);
+  return `${format(hours)}:${format(min)}:${sec}`;
 }

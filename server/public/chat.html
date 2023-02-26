@@ -14,16 +14,19 @@
 
       <!-- Messages go here -->
       <div id="messages" class="messages"></div>
-
       <!-- User input -->
       <div class="controls">
         <form action="#" id="chatForm">
           <input id="message" name="message" autocomplete="off"/>
-          <button id="submitMessageBtn">Submit message</button>
+          <button id="submitMessageBtn">Message</button>
         </form>
         <div class="location">
-          <img class="location-icon" src="./img/location-pin.svg"/>
-          <button id="locationShare">Send location</button>
+          <button id="locationShare" class="location-button">
+            <img class="location-icon" src="./img/location-pin.svg"/>
+            <span>
+              Send location
+            </span>
+          </button>
         </div>
       </div>
 
@@ -34,21 +37,20 @@
 
       <!-- Template for messages -->
       <script id="messageTemplate" type="text/html">
-        <div>
-          <p class="message">
-            <span class="user-name">Some user</span>
-            <span class="date-time"> - {{ createdAt }} </span> 
-            <span class="message">{{ message }}</span>
-          </p>
-        </div>
+        <p class="message">
+          <span class="user-name">Some user</span>
+          <span class="date-time"> - {{ createdAt }} </span>
+          <span class="message-text">{{ message }}</span>
+        </p>
       </script>
 
       <!-- Template for geolocation -->
       <script id="locationTemplate" type="text/html">
         <div class="geolocation-link">
-          <p>
-            <a href={{ locationLink }} target="_blank">My current location</a> 
-            <span class="date-time"> - {{ createdAt }} </span> 
+          <p class="message">
+            <span class="user-name">Some user</span>
+            <span class="date-time"> - {{ createdAt }} </span>
+            <a class="location-link message-text" href={{ locationLink }} target="_blank">My current location</a>
           </p>
         </div>
       </script>
