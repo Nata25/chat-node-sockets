@@ -8,20 +8,20 @@ const submitMessageBtn = document.getElementById('submitMessageBtn');
 const message = document.getElementById('message');
 const locationBtn = document.getElementById('locationShare');
 const messages = document.getElementById('messages');
-const roomTitle = document.getElementById('roomTitle');
+const chatMetadata = document.getElementById('chatMetadata');
 
 // Templates
 const messageTemplate = document.getElementById('messageTemplate').innerHTML;
 const locationTemplate = document.getElementById('locationTemplate').innerHTML;
-const roomNameTemplate = document.getElementById('roomNameTemplate').innerHTML;
+const chatMetadataTemplate = document.getElementById('chatMetadataTemplate').innerHTML;
 
 // Chat params
 const obj = new URLSearchParams(window.location.search);
 const userName = obj.get('username');
 const room = obj.get('room');
 
-const html = Mustache.render(roomNameTemplate, { room });
-roomTitle.insertAdjacentHTML('beforeend', html);
+const html = Mustache.render(chatMetadataTemplate, { room, userName });
+chatMetadata.insertAdjacentHTML('beforeend', html);
 
 socket.emit('join', { userName, room }, (error) => {
   if (error) {
@@ -31,14 +31,16 @@ socket.emit('join', { userName, room }, (error) => {
 });
 
 socket.on('message', message => {
-  const { text, createdAt } = message;
-  const html = Mustache.render(messageTemplate, { message: text, createdAt });
+  const { text, createdAt, userName, userId } = message;
+  const user = userId === socket.id ? '[Me]' : userName;
+  const html = Mustache.render(messageTemplate, { message: text, createdAt, user });
   messages.insertAdjacentHTML('beforeend', html);
 });
 
 socket.on('locationMessage', locationData => {
-  const { text, createdAt } = locationData;
-  const html = Mustache.render(locationTemplate, { locationLink: text, createdAt });
+  const { text, createdAt, userId } = locationData;
+  const user = userId === socket.id ? '[Me]' : userName;
+  const html = Mustache.render(locationTemplate, { locationLink: text, createdAt, user });
   messages.insertAdjacentHTML('beforeend', html);
 });
 

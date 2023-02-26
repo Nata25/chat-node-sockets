@@ -51,6 +51,11 @@ button[disabled] {
   width: 500px;
 }
 
+.room,
+.user-name {
+  color: var(--medblue);
+}
+
 .chat-section {
   padding: 10px;
 }

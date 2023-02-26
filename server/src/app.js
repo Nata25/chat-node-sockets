@@ -16,6 +16,10 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
+// Username placeholders
+const ADMIN = '[Admin]';
+const ME = '[Me]';
+
 io.on('connection', function(socket) {
 
   socket.on('join', ({ userName, room }, callback) => {
@@ -29,10 +33,17 @@ io.on('connection', function(socket) {
     }
 
     // emit to a new user
-    socket.emit('message', generateMessage(`Welcome, ${user.userName}!`));
+    socket.emit('message', {
+      userName: ADMIN,
+      ...generateMessage(`Welcome, ${user.userName}!`),
+    });
 
     // emit to all users in a room except for this particular user
-    socket.broadcast.to(room).emit('message', generateMessage(`${userName} has joined!`));
+    socket.broadcast.to(room).emit('message', {
+      userName: ADMIN,
+      userId: socket.id,
+      ...generateMessage(`${userName} has joined!`),
+    });
   });
 
   socket.on('sendMessage', (message, callback) => {
@@ -44,7 +55,11 @@ io.on('connection', function(socket) {
     const user = getUser(socket.id);
     if (user) {
       // emit to everybody in a specific room
-      io.to(user.room).emit('message', generateMessage(message));
+      io.to(user.room).emit('message', {
+        userId: socket.id,
+        userName: user.userName,
+        ...generateMessage(message),
+      });
       callback();
     }
   });
@@ -54,16 +69,21 @@ io.on('connection', function(socket) {
   socket.on('disconnect', () => {
     const { user } = removeUser(socket.id);
     if (user) {
-      io.to(user.room).emit('message', generateMessage(`${user.userName} has left!`));
+      io.to(user.room).emit('message', {
+        userName: ADMIN,
+        ...generateMessage(`${user.userName} has left!`),
+      });
     }
   });
 
   socket.on('sendLocation', ({ lat, lng }, callback) => {
     const user = getUser(socket.id);
     if (user) {
-      io.to(user.room).emit('locationMessage',
-        generateMessage(`https://google.com/maps?q=${lat},${lng}`)
-      );
+      io.to(user.room).emit('locationMessage', {
+        userId: socket.id,
+        userName: user.userName,
+        ...generateMessage(`https://google.com/maps?q=${lat},${lng}`),
+      });
       callback();
     }
   });

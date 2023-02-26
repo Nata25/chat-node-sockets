@@ -10,7 +10,7 @@
         <img src="./img/chat.svg" class="chat-icon"/>
       </h1>
       <!-- Room title -->
-      <div id="roomTitle"></div>
+      <div id="chatMetadata"></div>
 
       <!-- Messages go here -->
       <div id="messages" class="messages"></div>
@@ -31,14 +31,16 @@
       </div>
 
       <!-- Template for Room name -->
-      <script id="roomNameTemplate" type="text/html">
-        <h2>Room: {{ room }}</h2>
+      <script id="chatMetadataTemplate" type="text/html">
+        <h2>Room: <span class="room">{{ room }}</span>
+          | User: <span class="user-name">{{ userName }}</span>
+        </h2>
       </script>
 
       <!-- Template for messages -->
       <script id="messageTemplate" type="text/html">
         <p class="message">
-          <span class="user-name">Some user</span>
+          <span class="user-name">{{ user }}</span>
           <span class="date-time"> - {{ createdAt }} </span>
           <span class="message-text">{{ message }}</span>
         </p>
@@ -48,7 +50,7 @@
       <script id="locationTemplate" type="text/html">
         <div class="geolocation-link">
           <p class="message">
-            <span class="user-name">Some user</span>
+            <span class="user-name">{{ user }}</span>
             <span class="date-time"> - {{ createdAt }} </span>
             <a class="location-link message-text" href={{ locationLink }} target="_blank">My current location</a>
           </p>
