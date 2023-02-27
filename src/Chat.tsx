@@ -46,7 +46,13 @@ const Chat = () => {
   const TextMessage = (props: { message: IMessage }) => {
     const { value, createdAt } = props.message;
     return (
-      <p  className="message">{ value } <span className="date-time"> - { createdAt }</span></p>
+      <p className="message">
+        <span className="user-name">User name</span>
+        <span className="date-time"> - { createdAt }</span>
+        <span className="message-text">
+          { value }
+        </span>
+      </p>
     )
   }
 
@@ -54,38 +60,49 @@ const Chat = () => {
     const { value, createdAt } = props.message;
     return (
       <p className="message">
+        <span className="user-name">User name</span>
+        <span className="date-time"> - { createdAt }</span>
         <a
           href={value}
           target="_blank"
+          className="message-text"
         >
           My current location
         </a>
-        <span className="date-time"> - { createdAt }</span>
       </p>)
   }
 
   return (
     <div className="chat-section">
-      <h1 className="title">
-        Chat App
-        <img src={chatIcon} className="chat-icon" alt="Chat Icon" />
-      </h1>
-      <div className="messages">
-        {messages.map((msg, ind) => {
-          const key = `${msg.value}-${ind}`;
-          if (msg.type === MessageType.TEXT) return <TextMessage key={key} message={msg} />
-          else if (msg.type === MessageType.LINK) return <LinkMessage key={key} message={msg} />
-        })}
+      <div className="sidebar">
+        Sidebar
       </div>
-      <div className="controls">
-        <form onSubmit={postMessage} action="#">
-          <input name="message" autoComplete="off"/>
-          <button>Submit message</button>
-        </form>
-        <div className="location">
-          <img src={pinIcon} className="location-icon" alt="Location Icon" />
-          <button disabled={isLoading ?? null} onClick={shareLocation}>Send location</button>
-          {error && <p>Error on fetching location!</p>}
+      <div className="chat-section-content">
+        <h1 className="title">
+          Chat App
+          <img src={chatIcon} className="chat-icon" alt="Chat Icon" />
+        </h1>
+        <div className="messages-wrapper">
+          <div className="messages">
+            {messages.map((msg, ind) => {
+              const key = `${msg.value}-${ind}`;
+              if (msg.type === MessageType.TEXT) return <TextMessage key={key} message={msg} />
+              else if (msg.type === MessageType.LINK) return <LinkMessage key={key} message={msg} />
+            })}
+          </div>
+        </div>
+        <div className="controls">
+          <form onSubmit={postMessage} action="#">
+            <input name="message" autoComplete="off"/>
+            <button>Message</button>
+          </form>
+          <div className="location">
+            <button className="location-button" disabled={isLoading ?? null} onClick={shareLocation}>
+              <img src={pinIcon} className="location-icon" alt="Location Icon" />
+              Send location
+            </button>
+            {error && <p>Error on fetching location!</p>}
+          </div>
         </div>
       </div>
     </div>
