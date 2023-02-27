@@ -10,6 +10,7 @@ export default {
   output: {
     path: path.resolve(__dirname, 'public'),
     filename: 'main.js',
+    publicPath: '/',
   },
   target: 'web',
   resolve: {
@@ -21,6 +22,7 @@ export default {
     open: false,
     hot: false,
     liveReload: true,
+    historyApiFallback: true,
   },
   module: {
     rules: [

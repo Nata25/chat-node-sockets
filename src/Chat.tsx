@@ -1,4 +1,5 @@
 import React, { FormEvent }  from 'react';
+import { Link } from 'react-router-dom';
 
 import chatIcon from './img/chat.svg';
 import pinIcon from './img/location-pin.svg';
@@ -6,8 +7,11 @@ import pinIcon from './img/location-pin.svg';
 import useSockets from './hooks/use-sockets';
 import useGeolocation from './hooks/use-geolocation';
 
-import { IFormElements } from './models/form-elements';
 import { MessageType, IMessage } from './models/message.interface';
+
+interface IFormElements extends HTMLFormControlsCollection {
+  message?: HTMLInputElement,
+}
 
 const Chat = () => {
   const [ messages, setMessages ] = React.useState<IMessage[]>([]);
@@ -78,10 +82,12 @@ const Chat = () => {
         Sidebar
       </div>
       <div className="chat-section-content">
-        <h1 className="title">
-          Chat App
-          <img src={chatIcon} className="chat-icon" alt="Chat Icon" />
-        </h1>
+          <h1 className="title">
+            <Link to="/">
+              Chat App
+            </Link>
+            <img src={chatIcon} className="chat-icon" alt="Chat Icon" />
+          </h1>
         <div className="messages-wrapper">
           <div className="messages">
             {messages.map((msg, ind) => {
