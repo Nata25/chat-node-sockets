@@ -5,38 +5,51 @@
   </head>
   <body>
     <section class="chat-section">
-      <h1 class="title">
-        <a href="/">Chat App</a>
-        <img src="./img/chat.svg" class="chat-icon"/>
-      </h1>
-      <!-- Room title -->
-      <div id="chatMetadata"></div>
-
-      <div class="messages-wrapper">
-        <!-- Messages go here -->
-        <div id="messages" class="messages"></div>
-      </div>
-      <!-- User input -->
-      <div class="controls">
-        <form action="#" id="chatForm">
-          <input id="message" name="message" autocomplete="off"/>
-          <button id="submitMessageBtn">Message</button>
-        </form>
-        <div class="location">
-          <button id="locationShare" class="location-button">
-            <img class="location-icon" src="./img/location-pin.svg"/>
-            <span>
-              Send location
-            </span>
-          </button>
+      <div id="chatMetadata" class="sidebar"></div>
+      <div class="chat-section-content">
+        <h1 class="title">
+          <a href="/">Chat App</a>
+          <img src="./img/chat.svg" class="chat-icon"/>
+        </h1>
+        <!-- Chat metadata -->
+        <div class="messages-wrapper">
+          <!-- Messages go here -->
+          <div id="messages" class="messages"></div>
+        </div>
+        <!-- User input -->
+        <div class="controls">
+          <form action="#" id="chatForm">
+            <input id="message" name="message" autocomplete="off"/>
+            <button id="submitMessageBtn">Message</button>
+          </form>
+          <div class="location">
+            <button id="locationShare" class="location-button">
+              <img class="location-icon" src="./img/location-pin.svg"/>
+              <span>
+                Send location
+              </span>
+            </button>
+          </div>
         </div>
       </div>
 
-      <!-- Template for Room name -->
+      <!-- Template for Chat metadata -->
       <script id="chatMetadataTemplate" type="text/html">
-        <h2>Room: <span class="room">{{ room }}</span>
-          | User: <span class="user-name">{{ userName }}</span>
-        </h2>
+        <div class="sidebar-content">
+          <h2>Room: <span class="room">{{ room }}</span></h2>
+          <p>You: <span class="user-name">{{ userName }}</span></p>
+          <!-- List of active users -->
+          {{ #users }}
+            <p>Also in this room:</p>
+            <ul class="users-list">
+              <li>{{ userName }}</li>
+            </ul>
+          {{ /users }}
+          <!-- If user is the only one in the room -->
+          {{ ^users }}
+          <p>No one else in this room.</p>
+          {{ /users }}
+        </div>
       </script>
 
       <!-- Template for messages -->

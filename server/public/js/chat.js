@@ -19,9 +19,7 @@ const chatMetadataTemplate = document.getElementById('chatMetadataTemplate').inn
 const obj = new URLSearchParams(window.location.search);
 const userName = obj.get('username');
 const room = obj.get('room');
-
-const html = Mustache.render(chatMetadataTemplate, { room, userName });
-chatMetadata.insertAdjacentHTML('beforeend', html);
+let users = [];
 
 socket.emit('join', { userName, room }, (error) => {
   if (error) {
@@ -50,6 +48,12 @@ socket.on('locationMessage', locationData => {
     html = `<div class="current-user">${html}</div>`;
   }
   messages.insertAdjacentHTML('beforeend', html);
+});
+
+socket.on('roomData', data => {
+  users = data.users.filter(user => user.id !== socket.id);
+  const html = Mustache.render(chatMetadataTemplate, { room, userName, users });
+  chatMetadata.innerHTML = html;
 });
 
 chatForm.addEventListener('submit', function(event) {

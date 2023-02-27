@@ -7,7 +7,7 @@ import Filter from 'bad-words';
 import serveStatic from 'serve-static';
 
 import { generateMessage } from './utils/messages.js';
-import { addUser, removeUser, getUser } from './utils/users.js';
+import { addUser, removeUser, getUser, getUsersInRoom } from './utils/users.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,19 +18,18 @@ const io = new Server(server);
 
 // Username placeholders
 const ADMIN = '[Admin]';
-const ME = '[Me]';
 
 io.on('connection', function(socket) {
 
   socket.on('join', ({ userName, room }, callback) => {
-
-    socket.join(room);
     // store user and get user data back
     const { error, user } = addUser({ id: socket.id, userName, room });
     if (error) {
       callback(error);
       return;
     }
+
+    socket.join(room);
 
     // emit to a new user
     socket.emit('message', {
@@ -41,9 +40,16 @@ io.on('connection', function(socket) {
     // emit to all users in a room except for this particular user
     socket.broadcast.to(room).emit('message', {
       userName: ADMIN,
-      userId: socket.id,
       ...generateMessage(`${userName} has joined!`),
     });
+
+    // emit room data to client when users list in a room changes
+    io.to(room).emit('roomData', {
+      users: getUsersInRoom(room),
+      room,
+    });
+
+    callback();
   });
 
   socket.on('sendMessage', (message, callback) => {
@@ -69,9 +75,16 @@ io.on('connection', function(socket) {
   socket.on('disconnect', () => {
     const { user } = removeUser(socket.id);
     if (user) {
-      io.to(user.room).emit('message', {
+      const { room, userName } = user;
+      io.to(room).emit('message', {
         userName: ADMIN,
-        ...generateMessage(`${user.userName} has left!`),
+        ...generateMessage(`${userName} has left!`),
+      });
+
+      // emit room data to client when users list in a room changes
+      io.to(room).emit('roomData', {
+        users: getUsersInRoom(room),
+        room
       });
     }
   });
