@@ -1,5 +1,5 @@
 // React
-import React, { FormEvent, ReactElement }  from 'react';
+import React, { FormEvent }  from 'react';
 import { Link } from 'react-router-dom';
 
 // icons
@@ -11,10 +11,11 @@ import useSockets from './hooks/use-sockets';
 import useGeolocation from './hooks/use-geolocation';
 
 // models
-import { MessageType, IMessage, UserNamePlaceholders } from './models/message.interface';
+import { MessageType, IMessage } from './models/message.interface';
 
 // components
 import Sidebar from './Sidebar';
+import { TextMessage, LinkMessage } from './Messages';
 
 interface IFormElements extends HTMLFormControlsCollection {
   message?: HTMLInputElement,
@@ -65,52 +66,6 @@ const Chat = () => {
     fetchGeolocation(sendLocation);
   }
 
-  const getUserDisplayedName = (message: IMessage, isMe: boolean): string => {
-    const displayedUser = message.isSystem ? UserNamePlaceholders.SYSTEM
-      : isMe ? UserNamePlaceholders.CURRENT_USER
-      : message.userName;
-    return displayedUser;
-  }
-
-  const MessageWrapper = (props: { isMe: boolean, originalContent: ReactElement }) => {
-    const { isMe, originalContent } = props;
-    return isMe ? <div className="current-user">{originalContent}</div> : originalContent;
-  }
-
-  const TextMessage = (props: { message: IMessage }) => {
-    const { value, createdAt, userId, isSystem } = props.message;
-    const isMe = userId === currentUser?.id && !isSystem;
-    const displayedUser = getUserDisplayedName(props.message, isMe);
-    const content = (
-      <p className="message">
-        <span className="user-name">{ displayedUser }</span>
-        <span className="date-time"> - { createdAt }</span>
-        <span className="message-text">
-          { value }
-        </span>
-      </p>);
-    return <MessageWrapper isMe={isMe} originalContent={content} />
-  }
-
-  const LinkMessage = (props: { message: IMessage }) => {
-    const { value, createdAt, userId } = props.message;
-    const isMe = userId === currentUser?.id;
-    const displayedUser = getUserDisplayedName(props.message, isMe);
-    const content = (
-      <p className="message">
-        <span className="user-name">{ displayedUser }</span>
-        <span className="date-time"> - { createdAt }</span>
-        <a
-          href={value}
-          target="_blank"
-          className="message-text"
-        >
-          My current location
-        </a>
-      </p>)
-    return <MessageWrapper isMe={isMe} originalContent={content} />
-  }
-
   return (
     <div className="chat-section">
       {currentUser && <div className="sidebar">
@@ -124,13 +79,17 @@ const Chat = () => {
           <img src={chatIcon} className="chat-icon" alt="Chat Icon" />
         </h1>
         <div className="messages-wrapper">
-          <div className="messages">
+          {currentUser && <div className="messages">
             {messages.map((msg, ind) => {
               const key = `${msg.value}-${ind}`;
-              if (msg.type === MessageType.TEXT) return <TextMessage key={key} message={msg} />
-              else if (msg.type === MessageType.LINK) return <LinkMessage key={key} message={msg} />
+              if (msg.type === MessageType.TEXT) return (
+                <TextMessage key={key} message={msg} currentUser={currentUser} />
+              )
+              else if (msg.type === MessageType.LINK) return (
+                <LinkMessage key={key} message={msg} currentUser={currentUser} />
+              )
             })}
-          </div>
+          </div>}
         </div>
         <div className="controls">
           <form onSubmit={postMessage} action="#">

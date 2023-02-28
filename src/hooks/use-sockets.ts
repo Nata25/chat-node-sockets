@@ -29,28 +29,28 @@ const useSockets = () => {
         setCurrentUser({ userName, room, id: data.user.id });
       });
     } else {
+      // Don't allow in a chat without username and room
       navigate('/');
       return;
     }
 
     socket.on('message', (message: IMessageDTO) => {
-      console.log(message);
       setMessage(message);
     });
 
     socket.on('locationMessage', (message: IMessageDTO) => {
-      console.log(message);
       setLocation(message);
     });
 
     socket.on('roomData', data => {
-      console.log('roomData', data);
+      // Event is fired once user joined the room. Need this to populate Sidebar with data
       const otherUsers = data.users.filter((user: IUser) => user.id !== socket.id);
       setUsers(otherUsers);
     });
 
 
     return () => {
+      // Need to emit custom event as on socket doesn't disconnect on routing (without page reload)
       socket.emit('leaveRoom', { userName, room });
     }
   }, [socket, params]);
