@@ -60,10 +60,14 @@ button[disabled] {
 .chat-section {
   display: flex;
   height: 100vh;
+  padding-left: 225px;
 }
 
 .sidebar {
-  flex: 0 0 225px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 225px;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -232,6 +236,7 @@ a {
 .controls {
   display: flex;
   align-items: center;
+  flex: 0 0 50px;
   gap: 30px;
   overflow: auto;
 }

@@ -1,4 +1,4 @@
-import React, { FormEvent }  from 'react';
+import React, { FormEvent, ReactElement }  from 'react';
 import { Link } from 'react-router-dom';
 
 import chatIcon from './img/chat.svg';
@@ -7,7 +7,7 @@ import pinIcon from './img/location-pin.svg';
 import useSockets from './hooks/use-sockets';
 import useGeolocation from './hooks/use-geolocation';
 
-import { MessageType, IMessage } from './models/message.interface';
+import { MessageType, IMessage, UserNamePlaceholders } from './models/message.interface';
 
 interface IFormElements extends HTMLFormControlsCollection {
   message?: HTMLInputElement,
@@ -15,20 +15,24 @@ interface IFormElements extends HTMLFormControlsCollection {
 
 const Chat = () => {
   const [ messages, setMessages ] = React.useState<IMessage[]>([]);
-  const { sendMessage, sendLocation, message: newMessage, location } = useSockets();
+  const { sendMessage, sendLocation, message: newMessage, location, currentUser } = useSockets();
   const { isLoading, error, fetchGeolocation } = useGeolocation();
 
   React.useEffect(() => {
     if (newMessage) {
-      const { value, createdAt } = newMessage;
-      setMessages([...messages, { type: MessageType.TEXT, value, createdAt }]);
+      setMessages([...messages, {
+        ...newMessage,
+        type: MessageType.TEXT
+      }]);
     }
   }, [newMessage]);
 
   React.useEffect(() => {
     if (location) {
-      const { value, createdAt } = location;
-      setMessages([...messages, { type: MessageType.LINK, value, createdAt }]);
+      setMessages([...messages, {
+        type: MessageType.LINK,
+        ...location,
+      }]);
     }
   }, [location]);
 
@@ -47,24 +51,40 @@ const Chat = () => {
     fetchGeolocation(sendLocation);
   }
 
+  const getUserDisplayedName = (message: IMessage, isMe: boolean): string => {
+    const displayedUser = message.isSystem ? UserNamePlaceholders.SYSTEM
+      : isMe ? UserNamePlaceholders.CURRENT_USER
+      : message.userName;
+    return displayedUser;
+  }
+
+  const MessageWrapper = (props: { isMe: boolean, originalContent: ReactElement }) => {
+    const { isMe, originalContent } = props;
+    return isMe ? <div className="current-user">{originalContent}</div> : originalContent;
+  }
+
   const TextMessage = (props: { message: IMessage }) => {
-    const { value, createdAt } = props.message;
-    return (
+    const { value, createdAt, userId, isSystem } = props.message;
+    const isMe = userId === currentUser?.id && !isSystem;
+    const displayedUser = getUserDisplayedName(props.message, isMe);
+    const content = (
       <p className="message">
-        <span className="user-name">User name</span>
+        <span className="user-name">{ displayedUser }</span>
         <span className="date-time"> - { createdAt }</span>
         <span className="message-text">
           { value }
         </span>
-      </p>
-    )
+      </p>);
+    return <MessageWrapper isMe={isMe} originalContent={content} />
   }
 
   const LinkMessage = (props: { message: IMessage }) => {
-    const { value, createdAt } = props.message;
-    return (
+    const { value, createdAt, userId } = props.message;
+    const isMe = userId === currentUser?.id;
+    const displayedUser = getUserDisplayedName(props.message, isMe);
+    const content = (
       <p className="message">
-        <span className="user-name">User name</span>
+        <span className="user-name">{ displayedUser }</span>
         <span className="date-time"> - { createdAt }</span>
         <a
           href={value}
@@ -74,6 +94,7 @@ const Chat = () => {
           My current location
         </a>
       </p>)
+    return <MessageWrapper isMe={isMe} originalContent={content} />
   }
 
   return (

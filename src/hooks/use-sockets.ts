@@ -1,27 +1,51 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
 
 import { IMessageDTO } from '../models/message.interface';
+import { IUser } from '../models/user.interface';
 
 const socket = io('ws://localhost:3000');
 
 const useSockets = () => {
+  const [ params ] = useSearchParams();
+  const navigate = useNavigate();
   const [ message, setMessage ] = useState<IMessageDTO>();
   const [ location, setLocation ] = useState<IMessageDTO>();
+  const [ currentUser, setCurrentUser ] = useState<IUser>();
 
   useEffect(() => {
+    const userName = params.get('username');
+    const room = params.get('room');
+    // Join room based on query params and set current user
+    if (userName && room) {
+      socket.emit('join', { userName, room }, (data: { user: IUser, error?: Error }) => {
+        if (data.error) {
+          alert('This user cannot join the room!');
+          navigate('/');
+          return;
+        }
+        setCurrentUser({ userName, room, id: data.user.id });
+      });
+    } else {
+      navigate('/');
+      return;
+    }
+
     socket.on('message', (message: IMessageDTO) => {
       console.log(message);
       setMessage(message);
     });
-  }, [socket]);
 
-  useEffect(() => {
-    socket.on('locationMessage', message => {
+    socket.on('locationMessage', (message: IMessageDTO) => {
       console.log(message);
       setLocation(message);
     });
-  }, [socket]);
+
+    return () => {
+      socket.emit('leaveRoom', { userName, room });
+    }
+  }, [socket, params]);
 
   const sendMessage = (value: string) => {
     socket.emit(
@@ -47,7 +71,7 @@ const useSockets = () => {
     });
   }
 
-  return { sendMessage, sendLocation, message, location };
+  return { sendMessage, sendLocation, message, location, currentUser };
 }
 
 export default useSockets;
