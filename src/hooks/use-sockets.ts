@@ -13,6 +13,7 @@ const useSockets = () => {
   const [ message, setMessage ] = useState<IMessageDTO>();
   const [ location, setLocation ] = useState<IMessageDTO>();
   const [ currentUser, setCurrentUser ] = useState<IUser>();
+  const [ users, setUsers ] = useState<IUser[]>([]);
 
   useEffect(() => {
     const userName = params.get('username');
@@ -41,6 +42,13 @@ const useSockets = () => {
       console.log(message);
       setLocation(message);
     });
+
+    socket.on('roomData', data => {
+      console.log('roomData', data);
+      const otherUsers = data.users.filter((user: IUser) => user.id !== socket.id);
+      setUsers(otherUsers);
+    });
+
 
     return () => {
       socket.emit('leaveRoom', { userName, room });
@@ -71,7 +79,7 @@ const useSockets = () => {
     });
   }
 
-  return { sendMessage, sendLocation, message, location, currentUser };
+  return { sendMessage, sendLocation, message, location, currentUser, users };
 }
 
 export default useSockets;

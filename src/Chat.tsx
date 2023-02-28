@@ -1,13 +1,20 @@
+// React
 import React, { FormEvent, ReactElement }  from 'react';
 import { Link } from 'react-router-dom';
 
+// icons
 import chatIcon from './img/chat.svg';
 import pinIcon from './img/location-pin.svg';
 
+// hooks
 import useSockets from './hooks/use-sockets';
 import useGeolocation from './hooks/use-geolocation';
 
+// models
 import { MessageType, IMessage, UserNamePlaceholders } from './models/message.interface';
+
+// components
+import Sidebar from './Sidebar';
 
 interface IFormElements extends HTMLFormControlsCollection {
   message?: HTMLInputElement,
@@ -15,7 +22,14 @@ interface IFormElements extends HTMLFormControlsCollection {
 
 const Chat = () => {
   const [ messages, setMessages ] = React.useState<IMessage[]>([]);
-  const { sendMessage, sendLocation, message: newMessage, location, currentUser } = useSockets();
+  const {
+    sendMessage,
+    sendLocation,
+    message: newMessage,
+    location,
+    currentUser,
+    users,
+  } = useSockets();
   const { isLoading, error, fetchGeolocation } = useGeolocation();
 
   React.useEffect(() => {
@@ -99,16 +113,16 @@ const Chat = () => {
 
   return (
     <div className="chat-section">
-      <div className="sidebar">
-        Sidebar
-      </div>
+      {currentUser && <div className="sidebar">
+        <Sidebar userName={currentUser.userName} room={currentUser.room} users={users} />
+      </div>}
       <div className="chat-section-content">
-          <h1 className="title">
-            <Link to="/">
-              Chat App
-            </Link>
-            <img src={chatIcon} className="chat-icon" alt="Chat Icon" />
-          </h1>
+        <h1 className="title">
+          <Link to="/">
+            Chat App
+          </Link>
+          <img src={chatIcon} className="chat-icon" alt="Chat Icon" />
+        </h1>
         <div className="messages-wrapper">
           <div className="messages">
             {messages.map((msg, ind) => {

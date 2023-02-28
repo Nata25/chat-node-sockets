@@ -20,7 +20,7 @@ button {
   color: var(--white);
   font-size: 16px;
   font-weight: 600;
-  letter-spacing: 0.5px;
+  letter-spacing: .5px;
   border: 0;
   border-radius: 5px;
   cursor: pointer;
@@ -86,6 +86,7 @@ button[disabled] {
 }
 
 .users-list li {
+  margin: 5px 0;
   color: var(--lightblue);
 }
 
